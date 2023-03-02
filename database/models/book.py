@@ -8,17 +8,17 @@ class Book(Model):
     description = TextField(null=False)
     author = TextField(null=False)
     genre = TextField(null=False)
-    releaseDate = DateField(null=False)
+    releaseDate = TextField(null=False)
 
     price = IntField(null=False)
 
-    limited = BooleanField(null=False)
-    quantity = IntField()
+    limited = BooleanField(null=True)
+    quantity = IntField(null=True)
 
-    likes = IntField()
-    dislikes = IntField()
+    likes = IntField(null=True)
+    dislikes = IntField(null=True)
 
-    photo = TextField(null=False)
+    photo = TextField(null=True)
 
     class Meta:
         table = 'book'
