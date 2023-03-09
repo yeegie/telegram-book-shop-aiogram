@@ -36,3 +36,5 @@ class Webhooks:
 class Settings:
     section = 'settings'
     currency = parser.get(section, 'currency')
+    payment_token = parser.get(section, 'payment_token')
+    password = parser.get(section, 'password')

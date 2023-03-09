@@ -11,6 +11,8 @@ from aiohttp.web import Application, run_app
 
 from handlers.routers import user_router, admin_router
 
+from middlewares.base_middleware import MyMiddleware
+
 async def on_startup(dispatcher: Dispatcher, bot: Bot):
     # Utils
 
@@ -18,6 +20,9 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     await database.load_database()
 
     # Load middlewares
+    dispatcher.message.outer_middleware(MyMiddleware())
+    dispatcher.callback_query.outer_middleware(MyMiddleware())
+    logger.info('Middleware loaded')
 
     # Load routers
     dispatcher.include_router(user_router)
