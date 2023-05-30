@@ -217,8 +217,3 @@ async def get_quantity(message: Message, bot: Bot, state: FSMContext):
         await state.clear()
     except:
         await bot.send_message(message.from_user.id, 'Введите число')
-
-@admin_router.callback_query(ChangeProductCallback.filter(F.action == 'delete_this_message'))
-async def cancel(callback_query: CallbackQuery, state: FSMContext):
-    await callback_query.message.delete()
-    await state.clear()

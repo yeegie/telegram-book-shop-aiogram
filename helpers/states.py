@@ -13,3 +13,15 @@ class ChangeBook(StatesGroup):
     price = State()
     limited = State()
     quantity = State()
+
+class NewBook(StatesGroup):
+    photo = State()
+    file = State()
+    title = State()
+    description = State()
+    author = State()
+    genre = State()
+    releaseDate = State()
+    price = State()
+    limited = State()
+    quantity = State()

@@ -1,6 +1,6 @@
 import tortoise
 from tortoise.expressions import Q
-from .models import Book
+from .models import Book, User, Sales
 import numpy as np
 
 
@@ -99,3 +99,51 @@ class UpdateBook:
         book = await Book.get_or_none(id=book_id)
         book.quantity = new_quantity
         await book.save()
+
+class CreateBook:
+    @staticmethod
+    async def new(title, description, author, genre, release_date, price, limited, quantity):
+        await Book.create(title=title, description=description, author=author, genre=genre,
+                          releaseDate=release_date, price=price, limited=limited, quantity=quantity)
+
+class Users:
+    @staticmethod
+    async def change_role_by_id(user_id: int, role: str):
+        await User.get_or_create(user_id=user_id, type=role)
+
+class Order:
+    @staticmethod
+    async def get(order_id: int):
+        '''Получить заказ по id'''
+        return await Sales.get(id=order_id).values_list()
+
+    @staticmethod
+    async def create_with_address(user_id: int, username: str, book_id: int, price: int, address: str, telephone: str, email: str):
+        '''Создать чек с адресом'''
+        await Sales.create(user_id=user_id, username=username, book_id=book_id, price=price, address=address, telephone=telephone, email=email)
+
+    @staticmethod
+    async def create(user_id: int, username: str, book_id: int, price: int, status=None, finished=None):
+        '''Создать чек без адреса'''
+        await Sales.create(user_id=user_id, username=username, book_id=book_id, price=price, status=status, finished=finished)
+
+    @staticmethod
+    async def active():
+        '''Все не законченные заказы'''
+        orders_pool = await Sales.filter(finished=False).values_list()
+        return orders_pool
+
+    @staticmethod
+    async def all_orders():
+        '''Вывести все заказы'''
+        orders_pool = await Sales.all().values_list()
+        return orders_pool
+
+    @staticmethod
+    async def update_status(order_id: int, status: str, finished=False):
+        order = await Sales.filter(id=order_id).first()
+        order.status = status
+        order.finished = finished
+        await order.save()
+
+
