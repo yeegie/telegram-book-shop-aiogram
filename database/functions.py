@@ -118,6 +118,10 @@ class Order:
         return await Sales.get(id=order_id).values_list()
 
     @staticmethod
+    async def get_by_userid(userid: int):
+        return await Sales.filter(user_id=userid).values_list()
+
+    @staticmethod
     async def create_with_address(user_id: int, username: str, book_id: int, price: int, address: str, telephone: str, email: str):
         '''Создать чек с адресом'''
         await Sales.create(user_id=user_id, username=username, book_id=book_id, price=price, address=address, telephone=telephone, email=email)
@@ -145,5 +149,3 @@ class Order:
         order.status = status
         order.finished = finished
         await order.save()
-
-

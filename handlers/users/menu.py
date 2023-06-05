@@ -12,7 +12,8 @@ from typing import Union
 
 from ..routers import user_router
 
-from database.functions import get_products, select_by_id, SortBy, get_genres
+from database.functions import get_products, select_by_id, SortBy, get_genres, get_product_by_id
+from database.functions import Order
 
 
 @user_router.callback_query(MenuCallback.filter(F.action == 'show_catalog'))
@@ -182,3 +183,20 @@ async def selected_genre(callback_query: CallbackQuery, callback_data: OrderByCa
         await bot.send_message(callback_query.from_user.id, end_phrase, reply_markup=products())
         await bot.answer_callback_query(callback_query.id)
     await bot.answer_callback_query(callback_query.id)
+
+@user_router.callback_query(MenuCallback.filter(F.action == 'show_profile'))
+async def show_profile(callback_query: CallbackQuery, bot: Bot):
+    orders = await Order.get_by_userid(callback_query.from_user.id)
+    print(orders)
+    if orders is []:
+        await bot.send_message(callback_query.from_user.id, 'Ваш список заказов пуст!')
+    else:
+        for order in orders:
+            await bot.send_message(callback_query.from_user.id, f'''
+Заказ номер {order[0]}
+Заказ от {order[-2].strftime("%d-%m-%Y %H:%M")}
+Товар: {(await get_product_by_id(order[4]))[1]}
+Общая сумма: {order[5]} руб.
+            ''',)
+    await bot.answer_callback_query(callback_query.id)
+

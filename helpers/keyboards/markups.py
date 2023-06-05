@@ -12,11 +12,11 @@ def menu():
 
     btn_show_products = InlineKeyboardButton(text='Каталог 📚', callback_data=MenuCallback(action='show_catalog').pack())
     btn_show_profile = InlineKeyboardButton(text='Профиль 👤', callback_data=MenuCallback(action='show_profile').pack())
-    btn_settings = InlineKeyboardButton(text='Настройки ⚙', callback_data=MenuCallback(action='show_settings').pack())
+    # btn_settings = InlineKeyboardButton(text='Настройки ⚙', callback_data=MenuCallback(action='show_settings').pack())
 
     markup.add(btn_show_products)
     markup.add(btn_show_profile)
-    markup.row(btn_settings)
+    # markup.row(btn_settings)
 
     return markup.as_markup(resize_keyboard=True)
 
@@ -92,4 +92,3 @@ async def author_list():
         markup.row(InlineKeyboardButton(text=author, callback_data=OrderByCallback(type='author', value=author).pack()))
     markup.row(btn_filter)
     return markup.as_markup()
-
