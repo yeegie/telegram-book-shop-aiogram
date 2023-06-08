@@ -14,3 +14,7 @@ class ChangeOrderCallback(CallbackData, prefix='order'):
 class ChangeOrderStatusCallback(CallbackData, prefix='order-status'):
     status: str
     order_id: int
+
+class DeleteAdmin(CallbackData, prefix='admin'):
+    action: str
+    id: int

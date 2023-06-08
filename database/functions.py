@@ -117,6 +117,10 @@ class Users:
     async def get_user_role(user_id: int):
         return (await User.get(user_id=user_id).values_list())[1]
 
+    @staticmethod
+    async def get_admins():
+        return await User.filter(type='admin').values_list()
+
 class Order:
     @staticmethod
     async def get(order_id: int):

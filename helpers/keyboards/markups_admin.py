@@ -2,7 +2,7 @@ import locale
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton, KeyboardButton
 from database.models import Book, User
 
-from .fabric_admin import AdminMenuCallBack, ChangeProductCallback, ChangeOrderCallback, ChangeOrderStatusCallback
+from .fabric_admin import AdminMenuCallBack, ChangeProductCallback, ChangeOrderCallback, ChangeOrderStatusCallback, DeleteAdmin
 
 btn_back = InlineKeyboardButton(text='Назад', callback_data=AdminMenuCallBack(action='back').pack())
 
@@ -23,7 +23,7 @@ def menu():
     markup.row(btn_orders)
     markup.row(btn_stats)
     markup.row(btn_mailing)
-    # markup.row(btn_security)
+    markup.row(btn_security)
     # markup.row(btn_settings)
 
     return markup.as_markup()
@@ -111,5 +111,25 @@ def status_variants(order_id):
     markup.row(btn_send)
     markup.row(btn_waiting)
     markup.row(btn_finished)
+
+    return markup.as_markup()
+
+def security_menu():
+    markup = InlineKeyboardBuilder()
+
+    btn_show_admins = InlineKeyboardButton(text='Список администраторов', callback_data=AdminMenuCallBack(action='show_admins').pack())
+    btn_change_password = InlineKeyboardButton(text='Изменить пароль', callback_data=AdminMenuCallBack(action='change_password').pack())
+
+    markup.row(btn_show_admins)
+    markup.row(btn_change_password)
+
+    return markup.as_markup()
+
+def delete_admin(id: int):
+    markup = InlineKeyboardBuilder()
+
+    btn_delete = InlineKeyboardButton(text='Удалить', callback_data=DeleteAdmin(action='delete', id=id).pack())
+
+    markup.row(btn_delete)
 
     return markup.as_markup()

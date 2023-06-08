@@ -4,10 +4,10 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, FSInputFile, CallbackQuery
 
-from helpers.keyboards.markups_admin import menu, select_product, edit_product, show_orders_menu
-from helpers.keyboards.fabric_admin import AdminMenuCallBack, ChangeProductCallback
+from helpers.keyboards.markups_admin import menu, select_product, edit_product, show_orders_menu, security_menu, delete_admin
+from helpers.keyboards.fabric_admin import AdminMenuCallBack, ChangeProductCallback, DeleteAdmin
 
-from database.functions import get_products, CreateBook, Order
+from database.functions import get_products, CreateBook, Order, Users
 
 from helpers.states import NewBook
 from helpers.functions import edit_message, delete_and_send_message
@@ -123,8 +123,29 @@ async def stats(callback_query: CallbackQuery, bot: Bot):
     await bot.answer_callback_query(callback_query.id)
 
 @admin_router.callback_query(AdminMenuCallBack.filter(F.action == 'security'))
-async def stats(callback_query: CallbackQuery, bot: Bot):
-    print('security')
+async def security_panel(callback_query: CallbackQuery, bot: Bot):
+    await delete_and_send_message(bot, callback_query, 'Безопасноть 🔒', security_menu())
+
+@admin_router.callback_query(AdminMenuCallBack.filter(F.action == 'show_admins'))
+async def admins_list(callback_query: CallbackQuery, bot: Bot):
+    admins = await Users.get_admins()
+    for admin in admins:
+        await callback_query.message.answer(f'''
+@{admin[-1]}
+id: {admin[-2]}
+type: {admin[1]}
+''', reply_markup=delete_admin(admin[-2]))
+    await bot.answer_callback_query(callback_query.id)
+
+@admin_router.callback_query(DeleteAdmin.filter(F.action == 'delete'))
+async def delete_admin_menu(callback_query: CallbackQuery, callback_data: DeleteAdmin, bot: Bot):
+    await Users.change_role_by_id(callback_data.id, 'user')
+    await callback_query.answer(text=f'Разжалован {callback_data.id}')
+    print(f'[!] Пользователь @{callback_query.from_user.username} разжаловал {callback_data.id} {datetime.now()}')
+
+@admin_router.callback_query(AdminMenuCallBack.filter(F.action == 'change_password'))
+async def change_password(callback_query: CallbackQuery, bot: Bot):
+    print('cp')
     await bot.answer_callback_query(callback_query.id)
 
 @admin_router.callback_query(AdminMenuCallBack.filter(F.action == 'settings'))
