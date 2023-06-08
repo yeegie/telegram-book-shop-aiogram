@@ -12,6 +12,6 @@ from aiogram.filters import Command
 from .routers import admin_router
 from .routers import user_router
 
-@user_router.message(Command(commands='login'))
-async def login(message: Message, state: FSMContext):
-    print('LOGIN')
+# @user_router.message(Command(commands='login'))
+# async def login(message: Message, state: FSMContext):
+#     print('LOGIN')

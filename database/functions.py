@@ -109,7 +109,13 @@ class CreateBook:
 class Users:
     @staticmethod
     async def change_role_by_id(user_id: int, role: str):
-        await User.get_or_create(user_id=user_id, type=role)
+        user = await User.filter(user_id=user_id).first()
+        user.type = role
+        await user.save()
+
+    @staticmethod
+    async def get_user_role(user_id: int):
+        return (await User.get(user_id=user_id).values_list())[1]
 
 class Order:
     @staticmethod

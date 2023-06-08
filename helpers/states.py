@@ -25,3 +25,6 @@ class NewBook(StatesGroup):
     price = State()
     limited = State()
     quantity = State()
+
+class Login(StatesGroup):
+    password = State()
