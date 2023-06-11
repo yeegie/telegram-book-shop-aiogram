@@ -22,7 +22,7 @@ def menu():
     markup.row(btn_delete_product)
     markup.row(btn_orders)
     markup.row(btn_stats)
-    markup.row(btn_mailing)
+    # markup.row(btn_mailing)
     markup.row(btn_security)
     # markup.row(btn_settings)
 
@@ -121,7 +121,7 @@ def security_menu():
     btn_change_password = InlineKeyboardButton(text='Изменить пароль', callback_data=AdminMenuCallBack(action='change_password').pack())
 
     markup.row(btn_show_admins)
-    markup.row(btn_change_password)
+    # markup.row(btn_change_password)
 
     return markup.as_markup()
 

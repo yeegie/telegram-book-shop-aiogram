@@ -29,6 +29,8 @@ async def get_password(message: Message, bot: Bot, state: FSMContext):
         await message.answer('Вы повышены до администратора')
         await Users.change_role_by_id(message.from_user.id, 'admin')
         print(f'[!] @{message.from_user.username} повышен до администратора! {datetime.now()}')
+    elif (await Users.get_user_role(message.from_user.id) == 'admin'):
+        await message.answer('Вы уже вошли в систему!')
     else:
-        await message.answer('Ошибка!')
+        await message.answer('Некорректый пароль!')
     await state.clear()
