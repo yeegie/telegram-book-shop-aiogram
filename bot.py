@@ -8,11 +8,14 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
-from aiohttp.web import Application, run_app
+from aiohttp import web
+from aiogram.client.session.aiohttp import AiohttpSession
 
 from handlers.routers import user_router, admin_router
 
 from middlewares.base_middleware import MyMiddleware
+
+from webhooks import web_application
 
 
 # Webhook method
@@ -30,20 +33,21 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     print('[!] Bot started!')
 
 if __name__ == '__main__':
-    bot = Bot(token=Telegram.token, parse_mode='HTML')
+    session = AiohttpSession()
+    bot_settings = {"session": session, "parse_mode": "HTML"}
+    bot = Bot(token=Telegram.token, **bot_settings)
     storage = MemoryStorage()
+
     dispatcher = Dispatcher(storage=storage)
     dispatcher.startup.register(on_startup)
 
-    application = Application()
+    web_application['bot'] = bot
+    web_application['dp'] = dispatcher
 
-    application['bot'] = bot
-    application['dp'] = dispatcher
+    SimpleRequestHandler(dispatcher=dispatcher, bot=bot).register(web_application, path=Webhooks.bot_path)
 
-    SimpleRequestHandler(dispatcher=dispatcher, bot=bot).register(application, Webhooks.bot_path)
-
-    setup_application(application, dispatcher, bot=bot)
-    run_app(application, host=Webhooks.listen_address, port=Webhooks.listen_port)
+    setup_application(web_application, dispatcher, bot=bot)
+    web.run_app(web_application, host=Webhooks.listen_address, port=Webhooks.listen_port)
 
 
 # Long polling method
