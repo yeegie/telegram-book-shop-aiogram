@@ -45,6 +45,7 @@ if __name__ == '__main__':
     setup_application(application, dispatcher, bot=bot)
     run_app(application, host=Webhooks.listen_address, port=Webhooks.listen_port)
 
+
 # Long polling method
 # async def on_startup(dispatcher: Dispatcher, bot: Bot):
 #     await database.load_database()
